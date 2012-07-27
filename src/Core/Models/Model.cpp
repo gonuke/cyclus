@@ -104,33 +104,6 @@ Model* Model::create(Model* model_orig) {
   return model_copy;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Model::load_models() {
-  load_converters();
-  load_markets();
-  load_facilities();
-  load_institutions();
-  load_regions();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Model::load_markets() {
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements("/*/market");
-  
-  for (int i=0;i<nodes->nodeNr;i++) {
-    create("Market",nodes->nodeTab[i]);
-  }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Model::load_converters() {
-
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements("/*/converter");
-  
-  for (int i=0;i<nodes->nodeNr;i++) {
-    create("Converter",nodes->nodeTab[i]);
-  }
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Model::load_facilities() {
@@ -163,25 +136,6 @@ void Model::load_facilitycatalog(std::string filename, std::string ns, std::stri
   XMLinput->stripCurNS();
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Model::load_regions() {
-
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements("/simulation/region");
-  
-  for (int i=0;i<nodes->nodeNr;i++) {
-    create("Region",nodes->nodeTab[i]);
-  }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Model::load_institutions() {
-
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements("/simulation/region/institution");
-  
-  for (int i=0;i<nodes->nodeNr;i++) {
-    create("Inst",nodes->nodeTab[i]);   
-  }
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void Model::init(xmlNodePtr cur) {

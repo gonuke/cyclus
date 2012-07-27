@@ -6,7 +6,34 @@
 #include "CycException.h"
 
 //- - - - - - 
+
+XMLQueryEngine::XMLQueryEngine() {
+  
+  doc = NULL;
+  xpathCtxt = NULL;
+  numElements = 0;
+
+}
+
 XMLQueryEngine::XMLQueryEngine(std::string snippet) {
+
+  init(snippet);
+
+}
+
+XMLQueryEngine::XMLQueryEngine(xmlDocPtr current_doc) {
+
+  if (NULL == current_doc) {
+    throw CycParseException("Invalide xmlDocPtr passed into XMLQueryEnginer");
+  }
+  
+  doc = current_doc;
+  xpathCtxt = xmlXPathNewContext(doc);
+  numElements = 0;
+
+}
+
+void XMLQueryEngine::init(std::string snippet) {
 
   char *myEncoding = NULL;
   int myParserOptions = 0;
@@ -16,13 +43,15 @@ XMLQueryEngine::XMLQueryEngine(std::string snippet) {
   }
   
   xpathCtxt = xmlXPathNewContext(doc);
+  numElements = 0;
 
 }
+
 
 //- - - - - - - 
 int XMLQueryEngine::find_elements(const char* expression) {
 
-  int numElements = 0;
+  numElements = 0;
 
   /* Evaluate xpath expression */
   currentXpathObj = xmlXPathEvalExpression((const xmlChar*)expression, xpathCtxt);
@@ -35,7 +64,20 @@ int XMLQueryEngine::find_elements(const char* expression) {
 }
 
 //- - - - - - 
+std::string XMLQueryEngine::get_contents(const char* expression) {
+
+  if (0 == find_elements(expression)) {
+    throw CycParseException("Can't find an element with the name " + expression);
+  }
+  
+  return get_contents(0);
+
+}
 std::string XMLQueryEngine::get_contents(int elementNum) {
+
+  if (elementNum >= numElements) {
+    throw CycParseException("Too many elements requested. (" + elementNum + " >= " + numElements + ")");
+  }
 
   xmlNodePtr node = currentXpathObj->nodesetval->nodeTab[elementNum];
   std::string XMLcontent;
@@ -67,6 +109,4 @@ std::string XMLQueryEngine::get_name(int elementNum) {
   return XMLname;
 
 }
-
-
 

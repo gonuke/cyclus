@@ -186,28 +186,36 @@ Timer* Timer::Instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Timer::initialize(int dur, int m0, int y0, int start, int decay) {
+void Timer::initialize(std::string xmlParams) {
 
-  if (m0 < 1 || m0 > 12)
+  XMLQueryEngine xqe(xmlParams);
+
+  // get duration
+  simDur_ = strtol(xqe.get_contents("duration").c_str(),NULL,10);
+
+  // get simulation start
+  time0_ = strtol(xqe.get_contents("simstart").c_str(),NULL,10);
+  time_ = time0_;
+
+  // get start month
+  month0_ = strtol(xqe.get_contents("startmonth").c_str(),NULL,10);
+  if (month0_ < 1 || month0_ > 12)
     throw CycRangeException("Invalid month0; must be between 1 and 12 (inclusive).");
 
-  if (y0 < 1942)
+  // get start year  
+  year0_ = strtol(xqe.get_contents("startyear").c_str(),NULL,10);
+  if (year0_ < 1942)
     throw CycRangeException("Invalid year0; the first man-made nuclear reactor was build in 1942");
 
-  if (y0 > 2063)
+  if (year0_ > 2063)
     throw CycRangeException("Invalid year0; why start a simulation after we've got warp drive?: http://en.wikipedia.org/wiki/Warp_drive#Development_of_the_backstory");
 
+  // get decay interval
+  int decay = strtol(xqe.get_contents("decay").c_str(),NULL,10);
   if (decay > dur)
     throw CycRangeException("Invalid decay interval; no decay occurs if the interval is greater than the simulation duriation. For no decay, use -1 .");
   Material::setDecay(decay);
 
-  month0_ = m0;
-  year0_ = y0;
-
-  time0_ = start;
-  time_ = start;
-  simDur_ = dur;
-  
   startDate_ = boost::gregorian::date(year0_,month0_,1);
   endDate_ = getEndDate(startDate_,simDur_);
   date_ = boost::gregorian::date(startDate_);
@@ -244,31 +252,5 @@ pair<int, int> Timer::convertDate(int time) {
   return make_pair(month, year);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Timer::load_simulation() { 
-  
-  int dur, m0, y0, sim0, dec;
-  string dur_str, m0_str, y0_str, sim0_str, decay_str;
 
-  xmlNodePtr cur = XMLinput->get_xpath_element("/simulation");
-  // get duration
-  dur_str = (XMLinput->get_xpath_content(cur,"duration"));
-  // get start month
-  m0_str = (XMLinput->get_xpath_content(cur,"startmonth"));
-  // get start year
-  y0_str = (XMLinput->get_xpath_content(cur,"startyear"));
-  // get simulation start
-  sim0_str = (XMLinput->get_xpath_content(cur,"simstart"));
-  // get decay interval
-  decay_str = (XMLinput->get_xpath_content(cur,"decay"));
-
-  dur = strtol(dur_str.c_str(), NULL, 10);
-  m0 = strtol(m0_str.c_str(), NULL, 10);
-  y0 = strtol(y0_str.c_str(), NULL, 10);
-  sim0 = strtol(sim0_str.c_str(), NULL, 10);
-  dec = strtol(decay_str.c_str(), NULL, 10);
-
-  TI->initialize(dur, m0, y0, sim0, dec);
-
-}
 

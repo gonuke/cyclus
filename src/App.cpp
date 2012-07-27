@@ -8,13 +8,15 @@
 #include "Model.h"
 #include "BookKeeper.h"
 #include "Timer.h"
-#include "InputXML.h"
+#include "XMLFileLoader.h"
 #include "CycException.h"
 #include "Env.h"
 #include "Logger.h"
 
 using namespace std;
 namespace po = boost::program_options;
+
+string main_schema_ = "/share/cyclus.rng";
 
 //-----------------------------------------------------------------------
 // Main entry point for the test application...
@@ -108,7 +110,19 @@ int main(int argc, char* argv[]) {
 
   // read input file and setup simulation
   try {
-    XMLinput->load_file(vm["input-file"].as<string>()); 
+    XMLFileLoader xmlfile(vm["input-file"].as<string>());
+    xmlfile.validate_file(main_schema_);
+    
+    xmlfile.load_params();
+    
+    LOG(LEV_DEBUG3, "none!") << "Begin loading recipes";
+    xmlfile.load_recipes();
+    LOG(LEV_DEBUG3, "none!") << "End loading recipes";
+
+    LOG(LEV_DEBUG3, "none!") << "Begin loading models";
+    xmlFile.load_all_models();
+    LOG(LEV_DEBUG3, "none!") << "End loading models";
+    
   } catch (CycIOException ge) {
     CLOG(LEV_ERROR) << ge.what();
     return 0;

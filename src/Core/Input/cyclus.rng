@@ -33,15 +33,7 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 
     <interleave>
 
-    <ref name="duration"/>
-
-    <ref name="startmonth"/>
-
-    <ref name="startyear"/>
-
-    <ref name="simstart"/>
-
-    <ref name="decay"/>
+    <ref name="control"/>
 
     <oneOrMore>
     <ref name="commodity"/>
@@ -108,7 +100,23 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   </choice>
   </start>
 
+  <!-- begin section for simulation control -->
+  <define name="control">
+    <element name="control">
+      <interleave>
+	<ref name="duration"/>
+	<ref name="startmonth"/>
+	<ref name="startyear"/>
+	<ref name="simstart"/>
+	<ref name="decay"/>
+     </interleave>
+    </element>
+  </define>
+
+  <!-- end section for simulation control -->
+
   <!-- begin section for simulation parameters -->
+
   <define name="duration">
     <element name="duration">
       <data type="nonNegativeInteger"/>

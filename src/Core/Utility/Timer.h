@@ -6,6 +6,7 @@
 #include <vector>
 #include "boost/date_time/gregorian/gregorian.hpp"
 
+#include "XMLQueryEngine.h"
 #include "TimeAgent.h"
 #include "MarketModel.h"
 
@@ -127,16 +128,9 @@ public:
   /**
      Initialize this Timer by setting the specs for the simulation. 
       
-     @param dur the duration of this simulation, in months 
-     @param m0 the month the simulation starts: Jan. = 1, ..., Dec. = 12 
-     (default = 1) 
-     @param y0 the year the simulation starts (default = 2010) 
-     @param start the GENIUS time representing the first month of the 
-     simulation (default = 0) 
-     @param decay interval between decay calculations in months. <=0 if 
-     decay is off (default = 0) 
+     @param xmlParams  std::string XML snippet with initialization parameters
    */
-  void initialize(int dur = 1, int m0 = 1, int y0 = 2010, int start = 0, int decay = 0);
+  void initialize(std::string xmlParams);
 
   /**
      Runs the simulation. 
@@ -241,11 +235,6 @@ public:
      Converts the given GENIUS time into a (month, year) pair. 
    */
   std::pair<int, int> convertDate(int time);
-
-  /**
-     Loads the information about the simulation timing 
-   */
-  static void load_simulation();
 
 };
 #endif

@@ -36,47 +36,14 @@ RecipeLibrary* RecipeLibrary::Instance() {
 RecipeLibrary::RecipeLibrary() {}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-void RecipeLibrary::load_recipes() {
-  // load recipes from file
-  xmlNodeSetPtr nodes = XMLinput->get_xpath_elements("/*/recipe");
-  string name;
-  CLOG(LEV_DEBUG2) << "loading recipes {";
-  for (int i = 0; i < nodes->nodeNr; i++) {
-    name = XMLinput->getCurNS() + 
-                  XMLinput->get_xpath_content(nodes->nodeTab[i], "name");
-    CLOG(LEV_DEBUG2) << "Adding recipe '" << name << "'.";
-    load_recipe(nodes->nodeTab[i]); // load recipe
-  }
+void RecipeLibrary::load_recipe(std::string xmlRecipeElement, std::string cur_ns) {
 
-  // load recipes from databases
-  nodes = XMLinput->get_xpath_elements("/*/recipebook");
-  string filename, ns, format;
-  for (int i = 0; i < nodes->nodeNr; i++) {
-    filename = XMLinput->get_xpath_content(nodes->nodeTab[i], "filename");
-    ns = XMLinput->get_xpath_content(nodes->nodeTab[i], "namespace");
-    format = XMLinput->get_xpath_content(nodes->nodeTab[i], "format");
-    XMLinput->extendCurNS(ns);
-
-    if ("xml" == format) {
-      CLOG(LEV_DEBUG2) << "going into a recipe book...";
-      XMLinput->load_recipebook(filename);  // load recipe book
-    } 
-    else {
-      throw 
-        CycRangeException(format + "is not a supported recipebook format.");
-    }
-    XMLinput->stripCurNS();
-  }
-  CLOG(LEV_DEBUG2) << "}";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-void RecipeLibrary::load_recipe(xmlNodePtr cur) {
   // get general values from xml
-  string name = XMLinput->get_xpath_content(cur,"name");
-  string basis_str = XMLinput->get_xpath_content(cur,"basis");
-  xmlNodeSetPtr isotopes = XMLinput->get_xpath_elements(cur,"isotope");
-
+  XMLQueryEngine* xqe = new XMLQueryEngine(xmlRecipeElement);
+  
+  std::string name = xqe->get_contents("name");
+  std::string basis_str = xqe->get_contents("basis");
+  
   // set basis
   bool atom;
   Basis basis;
@@ -94,22 +61,30 @@ void RecipeLibrary::load_recipe(xmlNodePtr cur) {
 
   // make a new composition
   CompMapPtr recipe(new CompMap(basis));
-
+  
   // get values needed for composition
   double value;
   int key;
-  xmlNodePtr iso_node;
-  for (int i = 0; i < isotopes->nodeNr; i++) {
-    iso_node = isotopes->nodeTab[i];
-    key = strtol(XMLinput->get_xpath_content(iso_node,"id"), NULL, 10);
-    value = strtod(XMLinput->get_xpath_content(iso_node,"comp"), NULL);
+  
+  int numIsos = xqe->find_elements("isotope");
+  XMLQueryEngine* isoXqe = new XMLQueryString();
+
+  for (int i=0; i<numIsos; i++) {
+    isoXqe->init( xqe->get_contents(i) );
+    key = strtol(isoXqe->get_contents("id"),NULL,10);
+    value = strtod(isoXqe->get_contents("comp"),NULL);
     // update our mass-related values
     (*recipe)[key] = value;
   }
+  
   recipe->massify();
+
   // record this composition (static members and database)
-  recordRecipe(name,recipe);
+  recordRecipe(cur_ns+name,recipe);
+
+  delete isoXqe, xqe;
 }
+     
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void RecipeLibrary::recordRecipe(std::string name, CompMapPtr recipe) {
