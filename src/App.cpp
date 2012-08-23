@@ -9,6 +9,7 @@
 #include "BookKeeper.h"
 #include "Timer.h"
 #include "InputXML.h"
+#include "XMLFileLoader.h"
 #include "CycException.h"
 #include "Env.h"
 #include "Logger.h"
@@ -107,8 +108,13 @@ int main(int argc, char* argv[]) {
   }
 
   // read input file and setup simulation
+  XMLFileLoader inputXMLFile;
   try {
-    XMLinput->load_file(vm["input-file"].as<string>()); 
+    inputXMLFile = XMLFileLoader(vm["input-file"].as<string>());
+    inputXMLFile.validate_file(XMLFileLoader::main_schema_);
+
+    inputXMLFile.load_params();
+
   } catch (CycIOException ge) {
     CLOG(LEV_ERROR) << ge.what();
     return 0;
