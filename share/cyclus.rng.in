@@ -2,8 +2,7 @@
 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 <start>
 
-<element name="simulation"> <interleave>
-  
+<define name="controlblock">
   <element name ="control">
     <interleave>
       <optional>
@@ -14,14 +13,9 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <element name="startyear"> <data type="nonNegativeInteger"/> </element>
     </interleave>
   </element>
+</define>
 
-  <zeroOrMore>
-    <element name="commodity">
-      <element name="name"> <text/> </element>
-      <element name="solution_priority"> <data type="double"/> </element>
-    </element>
-  </zeroOrMore>
-    
+<define name="archblock">
   <element name="archetypes"> 
     <oneOrMore>
       <element name="spec"> 
@@ -32,75 +26,110 @@ datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       </element>
     </oneOrMore>
   </element>
+</define>
 
-  <oneOrMore>
-    <element name="facility">
-      <element name="name"> <text/> </element>
-      <optional>
-        <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
-      </optional>
+<define name="facilityblock">
+  <element name="facility"><interleave>
+    <element name="name"> <text/> </element>
+    <optional>
+      <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
+    </optional>
 
-      <element name="config">
-        <choice>
-        @Facility_REFS@
-        </choice>
-      </element>
+    <element name="config">
+      <choice>
+      @Facility_REFS@
+      </choice>
     </element>
-  </oneOrMore>
+  </interleave></element>
+</define>
 
-  <oneOrMore>
-    <element name="region"> <interleave>
-      <element name="name"> <text/> </element>
-      <optional>
-        <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
-      </optional>
+<define name="instblock">
+  <element name="institution"> <interleave>
+    <element name="name"> <text/> </element>
+    <optional>
+      <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
+    </optional>
 
-      <element name="config">
-        <choice>
-        @Region_REFS@
-        </choice>
-      </element>
-
-      <oneOrMore>
-        <element name="institution"> <interleave>
-          <element name="name"> <text/> </element>
-          <optional>
-            <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
-          </optional>
-
-          <optional>
-            <element name="initialfacilitylist">
-              <oneOrMore>
-                <element name="entry">
-                  <element name="prototype"> <text/> </element>
-                  <element name="number"> <data type="nonNegativeInteger"/> </element>
-                </element>
-              </oneOrMore>
-            </element>
-          </optional>
-
-          <element name="config">
-            <choice>
-            @Inst_REFS@
-            </choice>
+    <optional>
+      <element name="initialfacilitylist">
+        <oneOrMore>
+          <element name="entry">
+            <element name="prototype"> <text/> </element>
+            <element name="number"> <data type="nonNegativeInteger"/> </element>
           </element>
-        </interleave> </element>
-      </oneOrMore>
+        </oneOrMore>
+      </element>
+    </optional>
 
-    </interleave> </element>
-  </oneOrMore>
+    <element name="config">
+      <choice>
+      @Inst_REFS@
+      </choice>
+    </element>
+  </interleave> </element>
+</define>
+
+<define name="regionblock">
+  <element name="region"> <interleave>
+    <element name="name"> <text/> </element>
+    <optional>
+      <element name="lifetime"> <data type="nonNegativeInteger"/> </element>
+    </optional>
+
+    <element name="config">
+      <choice>
+      @Region_REFS@
+      </choice>
+    </element>
+
+    <ref name="instblock"/>
+
+    <zeroOrMore>
+       <choice>
+       <ref name="instblock"/>
+       </choice>
+    </zeroOrMore>
+
+  </interleave> </element>
+</define>
+
+<define name="commodblock">
+  <element name="commodity">
+    <element name="name"> <text/> </element>
+    <element name="solution_priority"> <data type="double"/> </element>
+  </element>
+</define>
+
+<define name="recipeblock">
+  <element name="recipe">
+    <element name="name"><text/></element>
+    <element name="basis"><text/></element>
+    <oneOrMore>
+      <element name="nuclide">
+        <element name="id"><data type="nonNegativeInteger"/></element>
+        <element name="comp"><data type="double"/></element>
+      </element>
+    </oneOrMore>
+  </element>
+</define>
+
+<element name="simulation"> <interleave>
+  
+  <ref name="controlblock"/>
+
+  <ref name="archblock"/>
+    
+  <ref name="facilityblock"/>
+
+  <ref name="regionblock"/>
 
   <zeroOrMore>
-    <element name="recipe">
-      <element name="name"><text/></element>
-      <element name="basis"><text/></element>
-      <oneOrMore>
-        <element name="nuclide">
-          <element name="id"><data type="nonNegativeInteger"/></element>
-          <element name="comp"><data type="double"/></element>
-        </element>
-      </oneOrMore>
-    </element>
+    <choice>
+    <ref name="facilityblock"/>
+    <ref name="regionblock"/>
+    <ref name="commodblock"/>
+    <ref name="recipeblock"/>
+    </choice>
   </zeroOrMore>
 
 </interleave> </element>
