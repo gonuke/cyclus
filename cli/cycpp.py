@@ -1308,6 +1308,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
         alias = prepare_type(t, alias)
         if alias[1] is None:
             val = 'val'
+            alias[1] = val
         elif isinstance(alias[1], STRING_TYPES):
             val = alias[1]
         else:
@@ -1329,7 +1330,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
             s += ind + 'for (int i{lev} = 0; i{lev} < n{lev}; ++i{lev})'.format(
                 lev=lev) + ' {\n'
             s += self.read_member(
-                'elem', val, t[1], uitype[1], 
+                'elem', alias[1], t[1], uitype[1], 
                 ind+'  ', idx='i{lev}'.format(lev=lev))
             s += ind + '  {0}[{idx}] = elem;\n'.format(
                 member, idx='i{lev}'.format(lev=lev))
@@ -1342,6 +1343,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
         alias = prepare_type(t, alias)
         if alias[1] is None:
             val = 'val'
+            alias[1] = val
         elif isinstance(alias[1], STRING_TYPES):
             val = alias[1]
         else:
@@ -1361,7 +1363,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
             s += ind + 'for (int i{lev} = 0; i{lev} < n{lev}; ++i{lev})'.format(
                 lev=self._idx_lev) + ' {\n'
             s += self.read_member(
-                'elem', val, t[1], uitype[1], 
+                'elem', alias[1], t[1], uitype[1], 
                 ind+'  ', idx='i{lev}'.format(lev=self._idx_lev))
             s += ind + '  {0}.insert(elem);\n'.format(member)
             s += ind + '}\n'
@@ -1373,6 +1375,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
         alias = prepare_type(t, alias)
         if alias[1] is None:
             val = 'val'
+            alias[1] = val
         elif isinstance(alias[1], STRING_TYPES):
             val = alias[1]
         else:
@@ -1392,7 +1395,7 @@ class InfileToDbFilter(CodeGeneratorFilter):
             s += ind + 'for (int i{lev} = 0; i{lev} < n{lev}; ++i{lev})'.format(
                 lev=lev) + ' {\n'
             s += self.read_member(
-                'elem', val, t[1], uitype[1], 
+                'elem', alias[1], t[1], uitype[1], 
                 ind+'  ', idx='i{lev}'.format(lev=lev))
             s += ind + '  {0}.push_back(elem);\n'.format(member)
             s += ind + '}\n'
