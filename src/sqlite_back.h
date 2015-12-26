@@ -34,7 +34,7 @@ class SqliteBack: public FullBackend {
   void Flush();
 
   /// Closes the backend, if approriate.
-  void Close() {};
+  virtual void Close() {};
 
   virtual QueryResult Query(std::string table, std::vector<Cond>* conds);
 
