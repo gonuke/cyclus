@@ -151,6 +151,9 @@ void Agent::Build(Agent* parent) {
 
 void Agent::EnterNotify() {
   ctx_->RegisterAgent(this);
+
+  coordinates.RecordPosition(this);
+
 }
 
 void Agent::Connect(Agent* parent) {
