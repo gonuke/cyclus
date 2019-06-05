@@ -24,7 +24,7 @@ endif()
 SET(CYCLUS_CORE_SRC ${CYCLUS_CORE_SRC} ${cc_files} PARENT_SCOPE)
 
 FILE(GLOB h_files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
-*FILE(GLOB cycpp_files "${CMAKE_CURRENT_SOURCE_DIR}/*.cycpp*")
+FILE(GLOB cycpp_files "${CMAKE_CURRENT_SOURCE_DIR}/*.cycpp.*")
 
 INSTALL(
   FILES ${h_files} ${cycpp_files}
