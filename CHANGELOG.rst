@@ -8,6 +8,19 @@ Since last release
 **Added:**
 * Added a copy constructor to Timer to allow MockSim to copy it without upsetting the progress bar (#1961)
 * Added progress bar to the simulation loop (#1912)
+
+**Changed:**
+
+**Fixed:**
+
+**Removed:**
+
+
+v1.6.1
+====================
+
+**Added:**
+
 * Added a warning for when a facility trades with itself (#1895)
 * Added a new datatype to the backend for tariff region (#1922)
 * Added Functions to access region and institution from facilities and institutions (#1914)
@@ -38,6 +51,8 @@ Since last release
 * New composition specification based on single nuclide (#1949) 
 * Added ability to calcuate a time shift between the start time and some other time stamp (#1907)
 * Users can specify for random seed to be created for random number generation (#1950)
+* Added progress bar to the simulation loop (#1912)
+
 
 **Changed:**
 * Modified cycpp.py to fix a few whitespace-related bugs, and allow cyclus vars to be initialized (#1954)
