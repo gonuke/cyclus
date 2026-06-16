@@ -190,7 +190,7 @@ IF(NOT CYCLUS_DOC_ONLY)
       SET(BOOST_ROOT "${DEPS_ROOT_DIR}")
       SET(BOOST_INCLUDEDIR "${DEPS_INCLUDE_HINTS}")
     endif (DEPS_ROOT_DIR)
-    FIND_PACKAGE(Boost COMPONENTS program_options filesystem system serialization REQUIRED)
+    FIND_PACKAGE(Boost COMPONENTS program_options filesystem  serialization REQUIRED)
     MESSAGE("--    Boost Root: ${Boost_ROOT}")
     MESSAGE("--    Boost Include directory: ${Boost_INCLUDE_DIR}")
     MESSAGE("--    Boost Library directories: ${Boost_LIBRARY_DIRS}")
@@ -343,6 +343,7 @@ IF(NOT CYCLUS_DOC_ONLY)
     # NOTE: for some reason, adding quotes around
     # ${Glibmm_INCLUDE_DIRS} breaks Ubuntu 12.04
     set(inc_dirs
+        "${PROJECT_SOURCE_DIR}/include"
         "${Python3_INCLUDE_DIRS}"
         "${LIBXML2_INCLUDE_DIR}"
         "${LIBXMLXX_INCLUDE_DIRS}"
