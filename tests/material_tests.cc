@@ -454,6 +454,12 @@ TEST_F(MaterialTest, TransmutePrevDecay) {
 
 TEST_F(MaterialTest, AbsorbPrevDecay) {
   FakeContext* fake_ctx = new FakeContext(&ti, &rec);
+  
+  // FakeContexts get generated with "manual" decay by default,
+  // so we need to set it to lazy to get Absorb to decay.
+  SimInfo lazy_si(100, 2015, 1, "", "lazy");
+  fake_ctx->InitSim(lazy_si);
+
   TestFacility* fake_fac = new TestFacility(fake_ctx);
 
   double untracked_qty = 1.0;

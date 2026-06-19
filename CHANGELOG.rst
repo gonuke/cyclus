@@ -39,6 +39,7 @@ Since last release
 * Users can specify for random seed to be created for random number generation (#1950)
 
 **Changed:**
+* Absorb back to respect manual decay mode and the logic of the decay conditional (#1918)
 * Modified cycpp.py to fix a few whitespace-related bugs, and allow cyclus vars to be initialized (#1954)
 * Changed the epsilon (eps) in Material::Decay to 1e-4 allowing 1 day decay of tritium (#1946)
 * Changed the schema for recipes to require oneOrMore instead of zeroOrMore (#1940)
