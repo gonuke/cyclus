@@ -11,6 +11,7 @@
 #include "test_agents/test_facility.h"
 #include "recorder.h"
 #include "timer.h"
+#include "test_context.h"
 
 
 namespace cyclus {
@@ -26,20 +27,19 @@ class MaterialTest : public ::testing::Test {
   Material::Ptr diff_mat_;
   Material::Ptr default_mat_;
   Material::Ptr tracked_mat_;
+  Material::Ptr untracked_mat_;
   Material::Ptr tracked_mat_no_decay_;
   long int u235_halflife_;
   int th228_halflife_;
   double u235_g_per_mol_;
 
   cyclus::Timer ti;
-  cyclus::Timer ti_day_timestep;
   cyclus::Recorder rec;
   cyclus::Context* ctx;
   TestFacility* fac;
   cyclus::Context* ctx_no_decay;
   TestFacility* fac_no_decay;
-  cyclus::Context* ctx_day_timestep;
-  TestFacility* fac_day_timestep;
+
   // dur 100, y0 = 2015, m0=1, handle="", d="never"
   SimInfo si;
   SimInfo si_day_timestep;
@@ -48,14 +48,6 @@ class MaterialTest : public ::testing::Test {
     PyStart();
     ctx = new cyclus::Context(&ti, &rec);
     fac = new TestFacility(ctx);
-
-    // Set up the one day time step context
-    int one_day = 86400;
-    si_day_timestep = SimInfo(100, 2015, 1, "", "manual");
-    si_day_timestep.dt = one_day;
-    ctx_day_timestep = new cyclus::Context(&ti_day_timestep, &rec);
-    ctx_day_timestep->InitSim(si_day_timestep);
-    fac_day_timestep = new TestFacility(ctx_day_timestep);
 
     si = SimInfo(100, 2015, 1, "", "never");
     ctx_no_decay = new cyclus::Context(&ti, &rec);
@@ -88,6 +80,7 @@ class MaterialTest : public ::testing::Test {
     two_test_mat_ = Material::CreateUntracked(2 * test_size_, test_comp_);
     ten_test_mat_ = Material::CreateUntracked(10 * test_size_, test_comp_);
     diff_mat_ = Material::CreateUntracked(test_size_, diff_comp_);
+    untracked_mat_ = Material::CreateUntracked(1000, diff_comp_);
 
     // tracked material
     tracked_mat_ = Material::Create(fac, 1000, diff_comp_);
