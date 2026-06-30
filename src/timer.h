@@ -25,6 +25,10 @@ class Timer {
   friend class ::SimInitTest;
 
  public:
+  Timer() = default;
+  ~Timer() = default;
+  Timer(const Timer& other);
+  Timer& operator=(const Timer& other);
 
   /// Sets intial time-related parameters for the simulation.
   ///

@@ -344,6 +344,36 @@ TEST_P(TimerTestsFixture, DoubleDecom) {
   cyclus::PyStop();
 }
 
+TEST_P(TimerTestsFixture, Copy) {
+  cyclus::Recorder rec;
+  cyclus::Timer ti;
+  cyclus::Timer ti2;
+  cyclus::Context ctx(&ti, &rec);
+
+
+  ti.Initialize(&ctx, cyclus::SimInfo(13));
+  ti.SetQuiet(true);
+  
+  // Quickly test the = operator first
+  ti2 = ti;
+  EXPECT_EQ(ti.dur(), ti2.dur());
+  EXPECT_EQ(ti.IsQuiet(), ti2.IsQuiet());
+
+  // Copy ti
+  cyclus::Timer ti3(ti);
+
+  // test that the copied ti3 matches ti
+  EXPECT_EQ(ti.dur(), ti3.dur());
+  EXPECT_EQ(ti.time(), ti3.time());
+  EXPECT_EQ(ti.CalcTimeDiff(1998, 1),
+            ti3.CalcTimeDiff(1998, 1));
+  EXPECT_EQ(ti.IsQuiet(), ti3.IsQuiet());
+
+  // Make sure the two are independent wrt member vars
+  ti.SetQuiet(false);
+  EXPECT_TRUE(ti3.IsQuiet());
+}
+
 #if CYCLUS_IS_PARALLEL
 INSTANTIATE_TEST_CASE_P(TimerTestsParallel, TimerTestsFixture, ::testing::Values(1, 2, 3, 4));
 #else

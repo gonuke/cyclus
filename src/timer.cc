@@ -19,6 +19,31 @@
 
 namespace cyclus {
 
+Timer::Timer(const Timer& other) {
+  *this = other;
+}
+
+Timer& Timer::operator=(const Timer& other) {
+  if (this != &other) {
+    ctx_ = other.ctx_;
+    time_ = other.time_;
+    si_ = other.si_;
+    want_snapshot_ = other.want_snapshot_;
+    want_kill_ = other.want_kill_;
+    tickers_ = other.tickers_;
+    cpp_tickers_ = other.cpp_tickers_;
+    py_tickers_ = other.py_tickers_;
+    build_queue_ = other.build_queue_;
+    decom_queue_ = other.decom_queue_;
+    progress_bar_.reset();
+    progress_update_frequency_ = other.progress_update_frequency_;
+    progress_origin_ = other.progress_origin_;
+    progress_span_ = other.progress_span_;
+    quiet_ = other.quiet_;
+  }
+  return *this;
+}
+
 void Timer::RunSim() {
   LogLevel saved_level = Logger::ReportLevel();
   if (quiet_) {

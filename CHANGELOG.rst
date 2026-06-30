@@ -6,19 +6,8 @@ Since last release
 ====================
 
 **Added:**
-
-**Changed:**
-
-**Fixed:**
-
-**Removed:**
-
-
-v1.6.1
-====================
-
-**Added:**
-
+* Added a copy constructor to Timer to allow MockSim to copy it without upsetting the progress bar (#1961)
+* Added progress bar to the simulation loop (#1912)
 * Added a warning for when a facility trades with itself (#1895)
 * Added a new datatype to the backend for tariff region (#1922)
 * Added Functions to access region and institution from facilities and institutions (#1914)
@@ -104,6 +93,7 @@ v1.6.1
 * Update contributing guide to match current practice (#1882)
 * Improved documentation in schema (#1958, #1959)
 * Changed interaction between ``mat::Absorb()`` and ``mat::Decay()`` to ensure all materials being absorbed are decayed first
+* Updated Changelog test (#1962)
 
 v1.6.0
 ====================
