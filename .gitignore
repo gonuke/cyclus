@@ -1,6 +1,6 @@
 *.sw*
 *.orig
-build
+build/
 .DS_Store
 debug
 core
@@ -88,3 +88,7 @@ cyclus/cycpp.py
 # Rever
 rever/
 .vscode
+
+# Coverage
+tests/html/*
+*coverage.info
