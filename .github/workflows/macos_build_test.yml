@@ -47,15 +47,15 @@ jobs:
 
     steps:
       - name: Setup XCode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@v1.7
         with:
           xcode-version: latest
 
       - name: Checkout Cyclus
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Miniconda
-        uses: conda-incubator/setup-miniconda@v3
+        uses: conda-incubator/setup-miniconda@v4
         with:
           python-version: "3.12"
           miniforge-version: "latest"
