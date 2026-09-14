@@ -51,6 +51,12 @@ jobs:
         with:
           xcode-version: latest
 
+      - name: Check native clang
+        shell: bash -el {0}
+        run: |
+          clang --version
+          which clang
+
       - name: Checkout Cyclus
         uses: actions/checkout@v7
 
@@ -63,6 +69,13 @@ jobs:
           auto-update-conda: true
           channels: conda-forge
 
+
+      - name: Check conda clang
+        shell: bash -el {0}
+        run: |
+          clang --version
+          which clang
+          
       - name: Build and Test Cyclus
         id: build-cyclus
         shell: bash -el {0}
